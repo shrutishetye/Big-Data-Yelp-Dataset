@@ -1,0 +1,21 @@
+How To Run
+--------------------------------------------------------------------
+Use following command to run 
+
+$ hadoop jar Problem3.jar TopTenBusiness /dataset/business.csv /dataset/review.csv /sns150630/output /sns150630/intermediate
+
+
+input files: /dataset/business.csv, /dataset/review.csv
+Output directory: /sns150630/output, /sns150630/intermediate
+
+----------------------------------------------------------------------
+
+Output of the program is there in a "Output" file. You can use Notepad++ to open the
+same file to see the output.
+
+---------------------------------------------------------------------
+Folder contains
+.java files --->Source Code
+.jar file
+Output file
+ReadMe
