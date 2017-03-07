@@ -1,0 +1,12 @@
+A = LOAD <input_path_business.csv> AS line;
+B = FOREACH A GENERATE FLATTEN((tuple(chararray,chararray,chararray))REGEX_EXTRACT_ALL(line,'(.*)\\:\\:(.*)\\:\\:(.*)')) AS (business_id:chararray,address:chararray,categories:chararray);
+C = DISTINCT B;
+D = FILTER C BY not (address matches '.*Palo Alto, CA.*') AND (address matches '.*CA.*');
+E = LOAD <input_path_review.csv> AS line_review;
+F = FOREACH E GENERATE FLATTEN((tuple(chararray,chararray,chararray,float))REGEX_EXTRACT_ALL(line_review,'(.*)\\:\\:(.*)\\:\\:(.*)\\:\\:(.*)')) AS (review_id:chararray,user_id:chararray,business_id:chararray,rating:float);
+G = GROUP F BY (business_id);
+H = FOREACH G GENERATE group as business_id, AVG(F.rating) as avg_rating;
+I = JOIN D by business_id, H by business_id;
+J = ORDER I BY avg_rating desc;
+K = LIMIT J 10;
+STORE K into <output_path>;

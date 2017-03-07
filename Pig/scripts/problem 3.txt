@@ -1,0 +1,8 @@
+A = LOAD <input_path_business.csv> AS line;
+B = FOREACH A GENERATE FLATTEN((tuple(chararray,chararray,chararray))REGEX_EXTRACT_ALL(line,'(.*)\\:\\:(.*)\\:\\:(.*)')) AS (business_id:chararray,address:chararray,categories:chararray);
+C = DISTINCT B;
+E = LOAD <input_path_review.csv> AS line_review;
+F = FOREACH E GENERATE FLATTEN((tuple(chararray,chararray,chararray,float))REGEX_EXTRACT_ALL(line_review,'(.*)\\:\\:(.*)\\:\\:(.*)\\:\\:(.*)')) AS (review_id:chararray,user_id:chararray,business_id:chararray,rating:float);
+G = COGROUP C BY business_id, F BY business_id;
+H = LIMIT G 5;
+STORE H into <output_path>
